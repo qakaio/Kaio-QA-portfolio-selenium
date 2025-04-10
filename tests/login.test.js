@@ -28,4 +28,4 @@ describe('Login Page', function () {
     const errorText = await errorEl.getText();
     expect(errorText).to.include('Username and password do not match');
   });
-}
+});

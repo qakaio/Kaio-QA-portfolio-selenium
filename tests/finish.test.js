@@ -1,35 +1,43 @@
-const createDriver = require('../helpers/driver');
-const LoginPage = require('../pages/login.page');
-const { By } = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 const { expect } = require('chai');
 
-describe('Finish Checkout', function () {
+describe('Finish Page - SauceDemo', function () {
+  this.timeout(30000);
+
   let driver;
 
   beforeEach(async function () {
-    driver = createDriver();
+    driver = await new Builder().forBrowser('chrome').build();
     await driver.get('https://www.saucedemo.com/');
-    const loginPage = new LoginPage(driver);
-    await loginPage.login('standard_user', 'secret_sauce');
+
+    // login
+    await driver.findElement(By.id('user-name')).sendKeys('standard_user');
+    await driver.findElement(By.id('password')).sendKeys('secret_sauce');
+    await driver.findElement(By.id('login-button')).click();
   });
 
   afterEach(async function () {
-    await driver.quit();
+    if (driver) {
+      await driver.quit();
+    }
   });
 
-  it('should display order confirmation message', async function () {
-    await driver.findElement(By.css('button[data-test="add-to-cart-sauce-labs-backpack"]')).click();
+  it('should complete a purchase and show the confirmation message', async function () {
+    await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]')).click();
+
     await driver.findElement(By.className('shopping_cart_link')).click();
-    await driver.findElement(By.css('button[data-test="checkout"]')).click();
 
-    await driver.findElement(By.css('input[data-test="firstName"]')).sendKeys('John');
-    await driver.findElement(By.css('input[data-test="lastName"]')).sendKeys('Doe');
-    await driver.findElement(By.css('input[data-test="postalCode"]')).sendKeys('12345');
-    await driver.findElement(By.css('input[data-test="continue"]')).click();
-    await driver.findElement(By.css('button[data-test="finish"]')).click();
+    await driver.findElement(By.css('[data-test="checkout"]')).click();
 
-    const thankYou = await driver.findElement(By.className('complete-header'));
-    const text = await thankYou.getText();
-    expect(text).to.include('Thank you for your order');
+    await driver.findElement(By.id('first-name')).sendKeys('Test');
+    await driver.findElement(By.id('last-name')).sendKeys('User');
+    await driver.findElement(By.id('postal-code')).sendKeys('12345');
+
+    await driver.findElement(By.css('[data-test="continue"]')).click();
+
+    await driver.findElement(By.css('[data-test="finish"]')).click();
+
+    const confirmation = await driver.findElement(By.className('complete-header')).getText();
+    expect(confirmation).to.equal('Thank you for your order!');
   });
 });
