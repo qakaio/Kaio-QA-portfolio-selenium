@@ -1,0 +1,14 @@
+{
+  "name": "qa-portfolio-saucedemo",
+  "version": "1.0.0",
+  "description": "QA Automation Portfolio - SauceDemo Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.test.js"
+  },
+  "dependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.16.0"
+  }
+}
