@@ -1,4 +1,4 @@
-# QA Automation Portfolio - SauceDemo
+# Kaio's QA Automation Portfolio - SauceDemo
 
 ## 🙋‍♂️ Author
 This portfolio was created to demonstrate end-to-end automation done by me on the SauceDemo platform.
