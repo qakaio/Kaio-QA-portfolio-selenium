@@ -23,27 +23,20 @@ describe('Finish Page - SauceDemo', function () {
   });
 
   it('should complete a purchase and show the confirmation message', async function () {
-    // Adiciona um item ao carrinho
     await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]')).click();
 
-    // Vai para o carrinho
     await driver.findElement(By.className('shopping_cart_link')).click();
 
-    // Vai para o checkout
     await driver.findElement(By.css('[data-test="checkout"]')).click();
 
-    // Preenche informações do usuário
     await driver.findElement(By.id('first-name')).sendKeys('Test');
     await driver.findElement(By.id('last-name')).sendKeys('User');
     await driver.findElement(By.id('postal-code')).sendKeys('12345');
 
-    // Continua para a próxima página
     await driver.findElement(By.css('[data-test="continue"]')).click();
 
-    // Finaliza o pedido
     await driver.findElement(By.css('[data-test="finish"]')).click();
 
-    // Valida a mensagem final
     const confirmation = await driver.findElement(By.className('complete-header')).getText();
     expect(confirmation).to.equal('Thank you for your order!');
   });
