@@ -1,5 +1,7 @@
 # QA Automation Portfolio - SauceDemo
 
+<img src="screenshot-passing.png"></img>
+
 ## 🙋‍♂️ Author
 This portfolio was created to demonstrate end-to-end automation done by me on the SauceDemo platform.
 
