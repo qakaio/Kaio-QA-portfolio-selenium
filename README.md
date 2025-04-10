@@ -3,7 +3,7 @@
 <img src="screenshot-passing.png"></img>
 
 ## 🙋‍♂️ Author
-This portfolio was created to demonstrate end-to-end automation done by me on the SauceDemo platform.
+This project was created to demonstrate end-to-end automation done by me on the SauceDemo platform.
 
 ## 🧪 Tech Stack
 - **Language**: JavaScript
