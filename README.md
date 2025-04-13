@@ -2,9 +2,6 @@
 
 <img src="screenshot-passing.png"></img>
 
-## 🙋‍♂️ Author
-This project was created to demonstrate end-to-end automation done by me on the SauceDemo platform.
-
 ## 🧪 Tech Stack
 - **Language**: JavaScript
 - **Framework**: Mocha (with Chai for assertions)
@@ -40,4 +37,6 @@ This project was created to demonstrate end-to-end automation done by me on the 
    npm test
    ```
 
-> Make sure Chrome is installed and in your system path.
+> Make sure Chrome is installed and in your system path.---
+
+Feel free to fork or contribute. QA is love, QA is life. 💙
