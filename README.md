@@ -41,4 +41,4 @@ This project is a complete automation test suite using **Selenium** and **Javasc
 
 > Make sure Chrome is installed and in your system path.---
 
-Feel free to fork or contribute. QA is love, QA is life. 💙
+QA is love, QA is life. 💙
