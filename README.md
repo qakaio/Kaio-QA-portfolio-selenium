@@ -1,8 +1,10 @@
 # QA Automation Portfolio - SauceDemo - Selenium WebDriver
 
-<img src="screenshot-passing.png"></img>
-
 This project is a complete automation test suite using **Selenium** and **Javascript**, targeting the [SauceDemo](https://www.saucedemo.com) e-commerce demo site.
+
+Built by [Kaio Garcia](https://github.com/qakaio) as part of my QA Automation portfolio.
+
+<img src="screenshot-passing.png"></img>
 
 ## 🧪 Tech Stack
 - **Language**: JavaScript
