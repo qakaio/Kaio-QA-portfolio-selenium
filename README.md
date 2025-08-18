@@ -42,5 +42,3 @@ Built by [Kaio Garcia](https://github.com/qakaio) as part of my QA Automation po
    ```
 
 > Make sure Chrome is installed and in your system path.---
-
-QA is love, QA is life. 💙
