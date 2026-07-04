@@ -1,14 +1,42 @@
 {
-  "name": "qa-portfolio-saucedemo",
+  "name": "kaio-qa-portfolio-selenium",
   "version": "1.0.0",
-  "description": "QA Automation Portfolio - SauceDemo Testing",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha tests/*.test.js"
+  "description": "Selenium WebDriver + JavaScript test automation framework for SauceDemo e-commerce site. Implements Page Object Model with Mocha/Chai.",
+  "author": "Kaio Garcia <kaioqa@protonmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qakaio/Kaio-QA-portfolio-selenium.git"
   },
-  "dependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.2.0",
-    "selenium-webdriver": "^4.16.0"
+  "homepage": "https://github.com/qakaio/Kaio-QA-portfolio-selenium",
+  "bugs": {
+    "url": "https://github.com/qakaio/Kaio-QA-portfolio-selenium/issues"
+  },
+  "keywords": [
+    "selenium",
+    "webdriver",
+    "test-automation",
+    "qa-automation",
+    "page-object-model",
+    "mocha",
+    "chai",
+    "saucedemo"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "test:headed": "HEADLESS=false mocha",
+    "test:verbose": "mocha --reporter spec",
+    "test:single": "mocha tests/login.spec.js",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
+  },
+  "devDependencies": {
+    "selenium-webdriver": "^4.20.0",
+    "mocha": "^10.4.0",
+    "chai": "^5.1.0",
+    "eslint": "^9.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
