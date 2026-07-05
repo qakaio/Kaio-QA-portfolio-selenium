@@ -28,12 +28,10 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Verify Chrome installation
-        run: |
-          # ubuntu-latest has Chrome pre-installed
-          which google-chrome || which chromium || which chromium-browser
-          google-chrome --version || chromium --version || chromium-browser --version
-          echo "CHROME_BIN=$(which google-chrome || which chromium || which chromium-browser)" >> $GITHUB_ENV
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
 
       - name: Install dependencies
         run: npm ci
@@ -41,7 +39,6 @@ jobs:
       - name: Run Selenium tests
         run: npm test
         env:
-          CHROME_BIN: ${{ env.CHROME_BIN }}
           HEADLESS: true
 
       - name: Upload screenshots on failure
