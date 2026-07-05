@@ -32,6 +32,7 @@ jobs:
         uses: browser-actions/setup-chrome@latest
         with:
           chrome-version: stable
+          cache-key: chrome
 
       - name: Install dependencies
         run: npm ci
