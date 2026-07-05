@@ -39,7 +39,36 @@ function createDriver() {
     '--use-mock-keychain',
     '--force-color-profile=srgb',
     '--disable-gpu',
-    '--remote-debugging-port=9222'
+    '--remote-debugging-port=9222',
+    '--disable-features=VizDisplayCompositor',
+    '--disable-features=TranslateUI',
+    '--disable-ipc-flooding-protection',
+    '--disable-renderer-backgrounding',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-breakpad',
+    '--disable-component-extensions-with-background-pages',
+    '--disable-default-apps',
+    '--disable-domain-reliability',
+    '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+    '--disable-infobars',
+    '--disable-logging',
+    '--disable-logging-redirect',
+    '--disable-notifications',
+    '--disable-permissions-api',
+    '--disable-popup-blocking',
+    '--disable-print-preview',
+    '--disable-prompt-on-repost',
+    '--disable-speech-api',
+    '--disable-translate',
+    '--disable-web-security',
+    '--disable-features=VizDisplayCompositor',
+    '--force-color-profile=srgb',
+    '--hide-scrollbars',
+    '--mute-audio',
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--no-zygote',
+    '--single-process'
   );
   
   // Use CHROME_BIN if set (for CI)
@@ -50,6 +79,10 @@ function createDriver() {
   // Disable automation flags
   options.excludeSwitches('enable-automation');
   options.excludeSwitches('enable-logging');
+  options.excludeSwitches('load-extension');
+  
+  // Set logging prefs
+  options.setLoggingPrefs({ browser: 'ALL', driver: 'ALL', performance: 'ALL' });
   
   return new Builder()
     .forBrowser('chrome')
