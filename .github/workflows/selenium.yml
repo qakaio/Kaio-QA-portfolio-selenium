@@ -28,14 +28,10 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install Chrome and ChromeDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          which chromium-browser
-          chromium-browser --version
-          chromedriver --version
-          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
 
       - name: Install dependencies
         run: npm ci
@@ -43,8 +39,6 @@ jobs:
       - name: Run Selenium tests
         run: npm test
         env:
-          CHROME_BIN: /usr/bin/chromium-browser
-          CHROMEDRIVER_PATH: /usr/bin/chromedriver
           HEADLESS: true
 
       - name: Upload screenshots on failure
