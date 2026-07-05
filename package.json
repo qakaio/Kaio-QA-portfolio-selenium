@@ -23,9 +23,9 @@
     "saucedemo"
   ],
   "scripts": {
-    "test": "mocha",
-    "test:headed": "HEADLESS=false mocha",
-    "test:verbose": "mocha --reporter spec",
+    "test": "mocha tests/**/*.js",
+    "test:headed": "HEADLESS=false mocha tests/**/*.js",
+    "test:verbose": "mocha tests/**/*.js --reporter spec",
     "test:single": "mocha tests/login.spec.js",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix"
