@@ -1,5 +1,6 @@
 const { Builder } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
 
 function createDriver() {
   const options = new chrome.Options();
@@ -9,15 +10,19 @@ function createDriver() {
     options.addArguments('--headless=new');
   }
   
-  // CI-friendly options - extensive list for CI stability
+  // Essential CI-friendly options only
   options.addArguments(
     '--no-sandbox',
     '--disable-dev-shm-usage',
     '--disable-gpu',
-    '--disable-dev-shm-usage',
-    '--disable-extensions',
-    '--disable-gpu',
     '--window-size=1920,1080',
+    '--disable-extensions',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--disable-software-rasterizer',
+    '--disable-features=VizDisplayCompositor',
+    '--disable-features=TranslateUI',
+    '--disable-features=BlinkGenPropertyTrees',
     '--disable-extensions',
     '--disable-plugins',
     '--disable-background-networking',
@@ -33,42 +38,14 @@ function createDriver() {
     '--metrics-recording-only',
     '--no-first-run',
     '--no-default-browser-check',
-    '--enable-automation=false',
     '--disable-infobars',
     '--password-store=basic',
     '--use-mock-keychain',
     '--force-color-profile=srgb',
     '--disable-gpu',
-    '--remote-debugging-port=9222',
-    '--disable-features=VizDisplayCompositor',
-    '--disable-features=TranslateUI',
-    '--disable-ipc-flooding-protection',
-    '--disable-renderer-backgrounding',
-    '--disable-backgrounding-occluded-windows',
-    '--disable-breakpad',
-    '--disable-component-extensions-with-background-pages',
-    '--disable-default-apps',
-    '--disable-domain-reliability',
-    '--disable-features=TranslateUI,BlinkGenPropertyTrees',
-    '--disable-infobars',
-    '--disable-logging',
-    '--disable-logging-redirect',
-    '--disable-notifications',
-    '--disable-permissions-api',
-    '--disable-popup-blocking',
-    '--disable-print-preview',
-    '--disable-prompt-on-repost',
-    '--disable-speech-api',
-    '--disable-translate',
-    '--disable-web-security',
-    '--disable-features=VizDisplayCompositor',
-    '--force-color-profile=srgb',
-    '--hide-scrollbars',
-    '--mute-audio',
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--no-zygote',
-    '--single-process'
+    '--disable-software-rasterizer',
+    '--disable-features=VizDisplayCompositor,TranslateUI,BlinkGenPropertyTrees',
+    '--remote-debugging-port=9222'
   );
   
   // Use CHROME_BIN if set (for CI)
@@ -81,8 +58,29 @@ function createDriver() {
   options.excludeSwitches('enable-logging');
   options.excludeSwitches('load-extension');
   
-  // Set logging prefs
-  options.setLoggingPrefs({ browser: 'ALL', driver: 'ALL', performance: 'ALL' });
+  // Use system Chrome - auto-detect
+  if (!process.env.CHROME_BIN) {
+    const chromePaths = [
+      '/usr/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/snap/bin/chromium'
+    ];
+    
+    for (const path of chromePaths) {
+      if (fs.existsSync(path)) {
+        options.setChromeBinaryPath(path);
+        process.env.CHROME_BIN = path;
+        break;
+      }
+    }
+  }
+  
+  // Disable automation flags
+  options.excludeSwitches('enable-automation');
+  options.excludeSwitches('enable-logging');
+  options.excludeSwitches('load-extension');
   
   return new Builder()
     .forBrowser('chrome')
