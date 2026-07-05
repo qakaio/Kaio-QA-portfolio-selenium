@@ -28,15 +28,12 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install Chrome and ChromeDriver
+      - name: Verify Chrome installation
         run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-          which chromium-browser
-          chromium-browser --version
-          chromedriver --version
-          echo "CHROME_BIN=/usr/bin/chromium-browser" >> $GITHUB_ENV
-          echo "CHROMEDRIVER_PATH=/usr/bin/chromedriver" >> $GITHUB_ENV
+          # ubuntu-latest has Chrome pre-installed
+          which google-chrome || which chromium || which chromium-browser
+          google-chrome --version || chromium --version || chromium-browser --version
+          echo "CHROME_BIN=$(which google-chrome || which chromium || which chromium-browser)" >> $GITHUB_ENV
 
       - name: Install dependencies
         run: npm ci
@@ -44,8 +41,7 @@ jobs:
       - name: Run Selenium tests
         run: npm test
         env:
-          CHROME_BIN: /usr/bin/chromium-browser
-          CHROMEDRIVER_PATH: /usr/bin/chromedriver
+          CHROME_BIN: ${{ env.CHROME_BIN }}
           HEADLESS: true
 
       - name: Upload screenshots on failure
