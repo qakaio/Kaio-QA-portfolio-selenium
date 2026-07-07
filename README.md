@@ -1,16 +1,15 @@
 # QA Automation Portfolio - SauceDemo (Selenium WebDriver + JavaScript)
 
 ![Selenium Tests](https://github.com/qakaio/Kaio-QA-portfolio-selenium/actions/workflows/selenium.yml/badge.svg)
-
-# QA Automation Portfolio - SauceDemo (Selenium WebDriver + JavaScript)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 Complete automation test suite using **Selenium WebDriver** with **JavaScript** (Mocha + Chai), implementing **Page Object Model**, targeting [SauceDemo](https://www.saucedemo.com) e-commerce demo site.
 
-Built by [Kaio Garcia](https://github.com/qakaio) — QA Engineer
+Built by [Kaio Garcia](https://github.com/qakaio) — Senior QA Engineer
 
 ---
 
-## 📊 Project Status
+## Project Status
 
 | Metric | Status |
 |--------|--------|
@@ -18,11 +17,11 @@ Built by [Kaio Garcia](https://github.com/qakaio) — QA Engineer
 | **Architecture** | Page Object Model ✅ |
 | **Assertions** | Chai BDD ✅ |
 | **Browser** | Chrome ✅ |
-| **CI/CD** | Ready for GitHub Actions |
+| **CI/CD** | GitHub Actions |
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 | Category | Technology |
 |----------|------------|
@@ -34,7 +33,7 @@ Built by [Kaio Garcia](https://github.com/qakaio) — QA Engineer
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Kaio-QA-portfolio-selenium/
@@ -53,7 +52,7 @@ Kaio-QA-portfolio-selenium/
 │   ├── checkout.spec.js         # Checkout flow
 │   └── finish.spec.js           # Order confirmation
 ├── .github/workflows/
-│   └── selenium.yml             # CI/CD pipeline (ready)
+│   └── selenium.yml             # CI/CD pipeline
 ├── .gitignore
 ├── package.json
 ├── mocharc.json                 # Mocha configuration
@@ -62,7 +61,7 @@ Kaio-QA-portfolio-selenium/
 
 ---
 
-## ✅ Test Coverage
+## Test Coverage
 
 | Area | Scenarios | Status |
 |------|-----------|--------|
@@ -74,7 +73,7 @@ Kaio-QA-portfolio-selenium/
 
 ---
 
-## 🛠 How to Run Locally
+## How to Run Locally
 
 ### Prerequisites
 - Node.js v18+
@@ -83,11 +82,8 @@ Kaio-QA-portfolio-selenium/
 
 ### Installation
 ```bash
-# 1. Clone the repository
 git clone https://github.com/qakaio/Kaio-QA-portfolio-selenium.git
 cd Kaio-QA-portfolio-selenium
-
-# 2. Install dependencies
 npm install
 ```
 
@@ -108,7 +104,7 @@ HEADLESS=false npm test
 
 ---
 
-## 🏗 Architecture Highlights
+## Architecture Highlights
 
 ### Page Object Model
 Each page has a dedicated class encapsulating:
@@ -140,7 +136,7 @@ class LoginPage {
 
 ---
 
-## 🔧 CI/CD Ready
+## CI/CD Ready
 
 ### GitHub Actions Workflow (`.github/workflows/selenium.yml`)
 ```yaml
@@ -163,7 +159,7 @@ jobs:
 
 ---
 
-## 🎯 Key Features Demonstrated
+## Key Features Demonstrated
 
 | Feature | Implementation |
 |---------|----------------|
@@ -176,40 +172,25 @@ jobs:
 
 ---
 
-## 📸 Screenshots
-
-| Test | Screenshot |
-|------|------------|
-| Valid Login | ![Login](screenshots/login-passed.png) |
-| Inventory | ![Inventory](screenshots/inventory.png) |
-| Cart | ![Cart](screenshots/cart.png) |
-| Checkout Complete | ![Finish](screenshots/finish.png) |
-
----
-
-## 📋 Requirements
-
+## Requirements
 - Node.js v18+
 - Google Chrome (latest stable)
 - npm or yarn
 
 ---
 
-## 📄 License
-
+## License
 MIT License — Feel free to use as reference for your own portfolio.
 
 ---
 
-## 👤 Author
-
-**Kaio Garcia** — QA Engineer
+## Author
+**Kaio Garcia** — Senior QA Engineer  
 🔗 [GitHub](https://github.com/qakaio) • [LinkedIn](https://linkedin.com/in/kaioqa) • [Portfolio](https://qakaio.github.io)
 
 ---
 
-## 🙏 Acknowledgments
-
+## Acknowledgments
 - [SauceDemo](https://www.saucedemo.com/) for the excellent demo e-commerce site
 - [Selenium Team](https://www.selenium.dev/) for the industry-standard automation framework
 - [Mocha](https://mochajs.org/) & [Chai](https://www.chaijs.com/) for elegant testing syntax
