@@ -1,5 +1,9 @@
 # QA Automation Portfolio - SauceDemo (Selenium WebDriver + JavaScript)
 
+![Selenium Tests](https://github.com/qakaio/Kaio-QA-portfolio-selenium/actions/workflows/selenium.yml/badge.svg)
+
+# QA Automation Portfolio - SauceDemo (Selenium WebDriver + JavaScript)
+
 Complete automation test suite using **Selenium WebDriver** with **JavaScript** (Mocha + Chai), implementing **Page Object Model**, targeting [SauceDemo](https://www.saucedemo.com) e-commerce demo site.
 
 Built by [Kaio Garcia](https://github.com/qakaio) — QA Engineer
