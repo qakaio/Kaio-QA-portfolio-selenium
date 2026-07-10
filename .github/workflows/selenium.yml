@@ -38,7 +38,67 @@ jobs:
       - name: Install ChromeDriver (matching Chrome version)
         run: |
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          # Use new ChromeDriver URL (old storage.googleapis.com is deprecated)
+          CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
+          echo "Chrome version: $CHROME_VERSION"
+          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
+          wget -q -O /tmp/chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
+          sudo unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver-linux64/chromedriver
+          sudo ln -sf /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+          /usr/local/bin/chromedriver --version
+
+      - name: Run Selenium Tests
+        run: npm test
+        env:
+          CI: true
+          DISPLAY: :99
+          CHROME_BIN: /usr/bin/google-chrome
+
+      - name: Start Xvfb
+        run: |
+          sudo Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+
+  allure:
+    name: Generate Allure Report
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chrome
+        run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Install ChromeDriver (matching Chrome version)
+        run: |
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
           CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
           echo "Chrome version: $CHROME_VERSION"
           echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
@@ -53,21 +113,24 @@ jobs:
           sudo Xvfb :99 -screen 0 1920x1080x24 &
           sleep 3
 
-      - name: Run Selenium Tests
+      - name: Run Selenium Tests for Allure
         run: npm test
         env:
           CI: true
           DISPLAY: :99
           CHROME_BIN: /usr/bin/google-chrome
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          npx allure generate allure-results --clean -o allure-report
+        env:
+          ALLURE_RESULTS_DIR: allure-results
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          destination_dir: allure-report
+          keep_files: true
