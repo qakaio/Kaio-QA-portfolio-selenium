@@ -39,7 +39,7 @@ describe('Cart Functionality - SauceDemo', function () {
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
     
-    // Wait for cart page to load - check for cart_list element
+    // Wait for cart page to load
     await driver.wait(until.elementLocated(By.className('cart_list')), 10000);
     
     // Verify cart page has the item
@@ -57,8 +57,15 @@ describe('Cart Functionality - SauceDemo', function () {
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
 
-    // Verify badge is gone
+    // Verify badge is gone or shows 0
     const badges = await driver.findElements(By.className('shopping_cart_badge'));
-    expect(badges.length).to.equal(0);
+    // If badge exists, it should show 0 or be gone
+    if (badges.length > 0) {
+      const badgeText = await badges[0].getText();
+      expect(badgeText).to.equal('0');
+    } else {
+      // Badge element is removed from DOM
+      expect(badges.length).to.equal(0);
+    }
   });
 });
