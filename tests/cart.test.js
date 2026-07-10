@@ -25,19 +25,33 @@ describe('Cart Functionality - SauceDemo', function () {
   });
 
   it('should add and remove an item from the cart', async function () {
+    // Add item to cart
     const addBtn = await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]'));
     await addBtn.click();
 
+    // Verify cart badge shows 1 item
+    const cartBadge = await driver.findElement(By.className('shopping_cart_badge'));
+    const badgeText = await cartBadge.getText();
+    expect(badgeText).to.equal('1');
+
+    // Navigate to cart
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
 
+    // Verify cart page has the item
     const cartItems = await driver.findElements(By.className('cart_item'));
     expect(cartItems.length).to.equal(1);
 
+    // Remove item from cart
     const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
     await removeBtn.click();
 
+    // Verify cart is empty
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
+
+    // Verify badge is gone
+    const badges = await driver.findElements(By.className('shopping_cart_badge'));
+    expect(badges.length).to.equal(0);
   });
 });
