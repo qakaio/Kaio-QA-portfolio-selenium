@@ -38,12 +38,11 @@ describe('Cart Functionality - SauceDemo', function () {
     // Navigate to cart
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
-
-    // Wait for cart page to load
-    await driver.wait(until.urlContains('cart'), 10000);
+    
+    // Wait for cart page to load - check for cart_list element
+    await driver.wait(until.elementLocated(By.className('cart_list')), 10000);
     
     // Verify cart page has the item
-    await driver.wait(until.elementLocated(By.className('cart_item')), 10000);
     const cartItems = await driver.findElements(By.className('cart_item'));
     expect(cartItems.length).to.equal(1);
 
@@ -51,7 +50,7 @@ describe('Cart Functionality - SauceDemo', function () {
     const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
     await removeBtn.click();
 
-    // Wait for item to be removed - use a simpler approach
+    // Wait for item to be removed
     await driver.sleep(1000);
 
     // Verify cart is empty
