@@ -38,8 +38,8 @@ describe('Cart Functionality - SauceDemo', function () {
     // Navigate to cart
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
-    
-    // Wait for cart page to load - use URL check instead
+
+    // Wait for cart page to load
     await driver.wait(until.urlContains('cart'), 10000);
     
     // Verify cart page has the item
@@ -60,11 +60,7 @@ describe('Cart Functionality - SauceDemo', function () {
 
     // Verify badge is gone or shows 0
     const badges = await driver.findElements(By.className('shopping_cart_badge'));
-    if (badges.length > 0) {
-      const badgeText = await badges[0].getText();
-      expect(badgeText).to.equal('0');
-    } else {
-      expect(badges.length).to.equal(0);
-    }
+    // The badge element is removed from DOM when cart is empty
+    expect(badges.length).to.equal(0);
   });
 });
