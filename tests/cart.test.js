@@ -51,8 +51,9 @@ describe('Cart Functionality - SauceDemo', function () {
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
 
-    // Verify badge is gone
+    // Verify badge is gone or shows 0
     const badges = await driver.findElements(By.className('shopping_cart_badge'));
+    // The badge element is removed from DOM when cart is empty
     expect(badges.length).to.equal(0);
   });
 });
