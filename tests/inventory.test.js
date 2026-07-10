@@ -1,7 +1,7 @@
 const { Builder, By } = require('selenium-webdriver');
 const { expect } = require('chai');
 
-describe('Finish Page - SauceDemo', function () {
+describe('Inventory Page - SauceDemo', function () {
   this.timeout(30000);
 
   let driver;
@@ -22,22 +22,20 @@ describe('Finish Page - SauceDemo', function () {
     }
   });
 
-  it('should complete a purchase and show the confirmation message', async function () {
-    await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]')).click();
+  it('should display product listing and allow sorting', async function () {
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).to.include('inventory');
 
-    await driver.findElement(By.className('shopping_cart_link')).click();
+    const products = await driver.findElements(By.className('inventory_item'));
+    expect(products.length).to.be.greaterThan(0);
 
-    await driver.findElement(By.css('[data-test="checkout"]')).click();
+    const sortDropdown = await driver.findElement(By.className('product_sort_container'));
+    await sortDropdown.click();
 
-    await driver.findElement(By.id('first-name')).sendKeys('Test');
-    await driver.findElement(By.id('last-name')).sendKeys('User');
-    await driver.findElement(By.id('postal-code')).sendKeys('12345');
+    const lohiOption = await driver.findElement(By.css('option[value="lohi"]'));
+    await lohiOption.click();
 
-    await driver.findElement(By.css('[data-test="continue"]')).click();
-
-    await driver.findElement(By.css('[data-test="finish"]')).click();
-
-    const confirmation = await driver.findElement(By.className('complete-header')).getText();
-    expect(confirmation).to.equal('Thank you for your order!');
+    const firstPrice = await driver.findElement(By.className('inventory_item_price')).getText();
+    expect(firstPrice).to.match(/\$\d+\.\d{2}/);
   });
 });

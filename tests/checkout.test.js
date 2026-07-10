@@ -3,7 +3,6 @@ const { expect } = require('chai');
 
 describe('Checkout Page - SauceDemo', function () {
   this.timeout(30000);
-
   let driver;
 
   beforeEach(async function () {
@@ -14,6 +13,9 @@ describe('Checkout Page - SauceDemo', function () {
     await driver.findElement(By.id('user-name')).sendKeys('standard_user');
     await driver.findElement(By.id('password')).sendKeys('secret_sauce');
     await driver.findElement(By.id('login-button')).click();
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).to.include('inventory');
   });
 
   afterEach(async function () {
@@ -35,6 +37,7 @@ describe('Checkout Page - SauceDemo', function () {
 
     await driver.findElement(By.css('[data-test="continue"]')).click();
 
+    // Verify we're on checkout overview page (step two)
     const currentUrl = await driver.getCurrentUrl();
     expect(currentUrl).to.include('checkout-step-two');
 

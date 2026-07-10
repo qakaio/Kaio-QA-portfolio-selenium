@@ -35,6 +35,7 @@ describe('Finish Page - SauceDemo', function () {
 
     await driver.findElement(By.css('[data-test="continue"]')).click();
 
+    // Use the correct data-test attribute for finish button
     await driver.findElement(By.css('[data-test="finish"]')).click();
 
     const confirmation = await driver.findElement(By.className('complete-header')).getText();
