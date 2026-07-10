@@ -27,22 +27,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome and ChromeDriver
-        run: |
-          # Install Chrome
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          
-          # Install matching ChromeDriver
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          wget -q -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}"
-          CHROMEDRIVER_VERSION=$(cat /tmp/chromedriver.zip)
-          wget -q -O /tmp/chromedriver_linux64.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          sudo unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
-          chromedriver --version
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'auto'
 
       - name: Start Xvfb
         run: |
@@ -85,13 +78,15 @@ jobs:
         with:
           name: allure-results
           path: allure-results
+          if-no-files-found: ignore
 
       - name: Generate Allure Report
+        if: ${{ hashFiles('allure-results/**') != '' }}
         run: |
           npx allure generate allure-results --clean -o allure-report
 
       - name: Upload Allure Report
-        if: always()
+        if: always() && ${{ hashFiles('allure-results/**') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
@@ -99,7 +94,7 @@ jobs:
           retention-days: 30
 
       - name: Deploy Allure Report to GitHub Pages
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && hashFiles('allure-results/**') != ''
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
