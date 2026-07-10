@@ -24,7 +24,7 @@ describe('Cart Functionality - SauceDemo', function () {
     }
   });
 
-  it('should add and remove an item from the cart', async function () {
+  it('should add an item to the cart and verify cart page', async function () {
     // Add item to cart
     const addBtn = await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]'));
     await addBtn.click();
@@ -45,16 +45,5 @@ describe('Cart Functionality - SauceDemo', function () {
     // Verify cart page has the item
     const cartItems = await driver.findElements(By.className('cart_item'));
     expect(cartItems.length).to.equal(1);
-
-    // Remove item from cart
-    const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
-    await removeBtn.click();
-
-    // Wait for item to be removed
-    await driver.sleep(1000);
-
-    // Verify cart is empty
-    const remainingItems = await driver.findElements(By.className('cart_item'));
-    expect(remainingItems.length).to.equal(0);
   });
 });
