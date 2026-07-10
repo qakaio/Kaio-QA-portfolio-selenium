@@ -39,8 +39,8 @@ describe('Cart Functionality - SauceDemo', function () {
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
 
-    // Wait for cart page to load
-    await driver.wait(until.elementLocated(By.className('cart_list')), 10000);
+    // Wait for cart page to load - wait for URL to contain 'cart'
+    await driver.wait(until.urlContains('cart'), 10000);
     
     // Verify cart page has the item
     const cartItems = await driver.findElements(By.className('cart_item'));
