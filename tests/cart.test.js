@@ -1,4 +1,4 @@
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 const { expect } = require('chai');
 
 describe('Cart Functionality - SauceDemo', function () {
@@ -29,7 +29,8 @@ describe('Cart Functionality - SauceDemo', function () {
     const addBtn = await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]'));
     await addBtn.click();
 
-    // Verify cart badge shows 1 item
+    // Wait for cart badge to update
+    await driver.wait(until.elementLocated(By.className('shopping_cart_badge')), 5000);
     const cartBadge = await driver.findElement(By.className('shopping_cart_badge'));
     const badgeText = await cartBadge.getText();
     expect(badgeText).to.equal('1');
@@ -39,6 +40,7 @@ describe('Cart Functionality - SauceDemo', function () {
     await cartLink.click();
 
     // Verify cart page has the item
+    await driver.wait(until.elementLocated(By.className('cart_item')), 5000);
     const cartItems = await driver.findElements(By.className('cart_item'));
     expect(cartItems.length).to.equal(1);
 
@@ -46,14 +48,15 @@ describe('Cart Functionality - SauceDemo', function () {
     const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
     await removeBtn.click();
 
-    // Verify cart is empty - check that cart_item elements are gone
-    await driver.sleep(500); // Wait for DOM update
+    // Wait for cart to update
+    await driver.wait(until.stalenessOf(await driver.findElement(By.className('cart_item'))), 5000);
+
+    // Verify cart is empty
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
 
     // Verify badge is gone or shows 0
     const badges = await driver.findElements(By.className('shopping_cart_badge'));
-    // The badge element is removed from DOM when cart is empty
     expect(badges.length).to.equal(0);
   });
 });
