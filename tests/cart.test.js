@@ -35,10 +35,10 @@ describe('Cart Functionality - SauceDemo', function () {
     const badgeText = await cartBadge.getText();
     expect(badgeText).to.equal('1');
 
-    // Navigate to cart - wait for page transition
+    // Navigate to cart
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
-    
+
     // Wait for cart page to load
     await driver.wait(until.urlContains('cart'), 10000);
     
@@ -51,16 +51,15 @@ describe('Cart Functionality - SauceDemo', function () {
     const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
     await removeBtn.click();
 
-    // Wait for cart to update - wait for item to be removed
-    await driver.sleep(1000);
+    // Wait for item to be removed
+    await driver.wait(until.stalenessOf(await driver.findElement(By.className('cart_item'))), 5000);
 
     // Verify cart is empty
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
 
-    // Verify badge is gone or shows 0
+    // Verify badge is gone
     const badges = await driver.findElements(By.className('shopping_cart_badge'));
-    // The badge element is removed from DOM when cart is empty
     expect(badges.length).to.equal(0);
   });
 });
