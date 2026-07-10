@@ -35,12 +35,14 @@
     "lint:fix": "eslint . --ext .js --fix"
   },
   "devDependencies": {
-    "selenium-webdriver": "^4.20.0",
-    "mocha": "^10.4.0",
-    "chai": "^5.1.0",
-    "mocha-allure-reporter": "^1.4.0",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/register": "^8.0.1",
     "allure-commandline": "^2.30.0",
-    "eslint": "^9.0.0"
+    "chai": "^5.1.0",
+    "eslint": "^9.0.0",
+    "mocha": "^10.4.0",
+    "mocha-allure-reporter": "^1.4.0",
+    "selenium-webdriver": "^4.20.0"
   },
   "engines": {
     "node": ">=18.0.0"
