@@ -46,7 +46,8 @@ describe('Cart Functionality - SauceDemo', function () {
     const removeBtn = await driver.findElement(By.css('[data-test="remove-sauce-labs-backpack"]'));
     await removeBtn.click();
 
-    // Verify cart is empty
+    // Verify cart is empty - check that cart_item elements are gone
+    await driver.sleep(500); // Wait for DOM update
     const remainingItems = await driver.findElements(By.className('cart_item'));
     expect(remainingItems.length).to.equal(0);
 
