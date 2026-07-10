@@ -27,25 +27,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome
-        run: |
-          # Install Chrome
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
 
-      - name: Install ChromeDriver (matching Chrome version)
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'auto'
+
+      - name: Start Xvfb
         run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
-          echo "Chrome version: $CHROME_VERSION"
-          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
-          wget -q -O /tmp/chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-          sudo unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver-linux64/chromedriver
-          sudo ln -sf /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-          /usr/local/bin/chromedriver --version
+          sudo Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
 
       - name: Run Selenium Tests
         run: npm test
@@ -53,11 +48,6 @@ jobs:
           CI: true
           DISPLAY: :99
           CHROME_BIN: /usr/bin/google-chrome
-
-      - name: Start Xvfb
-        run: |
-          sudo Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 3
 
   lint:
     name: Lint
@@ -89,24 +79,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome
-        run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
 
-      - name: Install ChromeDriver (matching Chrome version)
-        run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
-          CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
-          echo "Chrome version: $CHROME_VERSION"
-          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
-          wget -q -O /tmp/chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-          sudo unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver-linux64/chromedriver
-          sudo ln -sf /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-          /usr/local/bin/chromedriver --version
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'auto'
 
       - name: Start Xvfb
         run: |
