@@ -46,5 +46,18 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "mocha": {
+    "reporter": "mocha-allure-reporter",
+    "reporter-options": {
+      "outputDir": "allure-results",
+      "environmentInfo": {
+        "framework": "Selenium WebDriver + Mocha",
+        "language": "JavaScript (Node.js)",
+        "browser": "Chrome",
+        "os": "Ubuntu",
+        "project": "Kaio-QA-portfolio-selenium"
+      }
+    }
   }
 }
