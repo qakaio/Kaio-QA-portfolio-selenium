@@ -1,0 +1,5 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","1112","should display product listing and allow sorting","","2026-07-11","passed","2026-07-11","","Inventory Page - SauceDemo","Inventory Page - SauceDemo","should display product listing and allow sorting"
+"","1032","should login successfully with valid credentials","","2026-07-11","passed","2026-07-11","","Login Page","Login Page","should login successfully with valid credentials"
+"","4939","should add an item to the cart","","2026-07-11","passed","2026-07-11","","Cart Functionality - SauceDemo","Cart Functionality - SauceDemo","should add an item to the cart"
+"","1008","should show error for invalid credentials","","2026-07-11","passed","2026-07-11","","Login Page","Login Page","should show error for invalid credentials"

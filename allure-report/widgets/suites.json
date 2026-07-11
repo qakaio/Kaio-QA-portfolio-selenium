@@ -1,1 +1,1 @@
-{"total":0,"items":[]}
+{"total":3,"items":[{"uid":"52dafac86ee12ce5786fb19f136bb510","name":"Login Page","statistic":{"failed":0,"broken":0,"skipped":0,"passed":2,"unknown":0,"total":2}},{"uid":"1f372e35907570f2a670ebd3ae6a317e","name":"Cart Functionality - SauceDemo","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}},{"uid":"e39c415ec170f12e2ba8660d96d0dfa1","name":"Inventory Page - SauceDemo","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}}]}
