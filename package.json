@@ -24,7 +24,7 @@
     "allure-report"
   ],
   "scripts": {
-    "test": "mocha tests/**/*.js",
+    "test": "mocha tests/**/*.js --reporter mocha-allure-reporter",
     "test:headed": "HEADLESS=false mocha tests/**/*.js",
     "test:verbose": "mocha tests/**/*.js --reporter spec",
     "test:single": "mocha tests/login.spec.js",
