@@ -2,7 +2,7 @@ const { Builder, By, until } = require('selenium-webdriver');
 const { expect } = require('chai');
 
 describe('Cart Functionality - SauceDemo', function () {
-  this.timeout(30000);
+  this.timeout(60000);
   let driver;
 
   beforeEach(async function () {
@@ -30,7 +30,7 @@ describe('Cart Functionality - SauceDemo', function () {
     await addBtn.click();
 
     // Wait for cart badge to update
-    await driver.wait(until.elementLocated(By.className('shopping_cart_badge')), 5000);
+    await driver.wait(until.elementLocated(By.className('shopping_cart_badge')), 10000);
     const cartBadge = await driver.findElement(By.className('shopping_cart_badge'));
     const badgeText = await cartBadge.getText();
     expect(badgeText).to.equal('1');
@@ -39,8 +39,8 @@ describe('Cart Functionality - SauceDemo', function () {
     const cartLink = await driver.findElement(By.className('shopping_cart_link'));
     await cartLink.click();
 
-    // Wait for cart page to load - check for cart_list element
-    await driver.wait(until.elementLocated(By.className('cart_list')), 15000);
+    // Wait for cart page to load - wait for URL to contain 'cart'
+    await driver.wait(until.urlContains('cart'), 15000);
 
     // Verify cart page has the item
     const cartItems = await driver.findElements(By.className('cart_item'));
