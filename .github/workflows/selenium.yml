@@ -131,12 +131,9 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results
-          echo "allure.report.name=Kaio-QA-portfolio-selenium - Selenium WebDriver + Mocha" > allure-results/allure.properties
-          echo "allure.environment=Ubuntu" >> allure-results/allure.properties
-          npx allure generate allure-results --clean -o allure-report
+          npx allure generate allure-results --clean -o allure-report --name "Kaio-QA-portfolio-selenium - Selenium WebDriver + Mocha"
         env:
           ALLURE_RESULTS_DIR: allure-results
-          ALLURE_REPORT_NAME: "Kaio-QA-portfolio-selenium - Selenium WebDriver + Mocha"
 
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
