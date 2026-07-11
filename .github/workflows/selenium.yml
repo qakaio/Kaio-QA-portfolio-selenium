@@ -110,6 +110,17 @@ jobs:
           name: allure-results
           path: allure-results/
 
+      - name: Generate Environment Properties
+        run: |
+          cat > allure-results/environment.properties << 'EOF'
+          framework=Selenium WebDriver + Mocha
+          language=JavaScript (Node.js)
+          browser=Chrome
+          os=Ubuntu
+          project=Kaio-QA-portfolio-selenium
+          repo=https://github.com/qakaio/Kaio-QA-portfolio-selenium
+          EOF
+
       - name: Install Allure
         run: npm install -g allure-commandline
 
