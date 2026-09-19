@@ -1,6 +1,5 @@
 # Kaio-QA-portfolio-selenium
 node_modules/
-package-lock.json
 *.log
 .DS_Store
 .env
