@@ -1,16 +1,13 @@
-const { Builder } = require('selenium-webdriver');
+const { Builder, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const fs = require('fs');
 
 function createDriver() {
   const options = new chrome.Options();
-  
-  // Headless mode for CI
-  if (process.env.HEADLESS === 'true') {
+
+  if (process.env.HEADLESS !== 'false') {
     options.addArguments('--headless=new');
   }
-  
-  // Essential CI-friendly options
+
   options.addArguments(
     '--no-sandbox',
     '--disable-dev-shm-usage',
@@ -21,22 +18,24 @@ function createDriver() {
     '--disable-features=VizDisplayCompositor',
     '--remote-debugging-port=9222'
   );
-  
-  // Use CHROME_BIN if set (from CI workflow)
+
   if (process.env.CHROME_BIN) {
     options.setChromeBinaryPath(process.env.CHROME_BIN);
-    console.log(`Using Chrome binary from CHROME_BIN: ${process.env.CHROME_BIN}`);
   }
-  
-  // Disable automation flags
+
   options.excludeSwitches('enable-automation');
   options.excludeSwitches('enable-logging');
   options.excludeSwitches('load-extension');
-  
-  return new Builder()
+
+  const driver = new Builder()
     .forBrowser('chrome')
     .setChromeOptions(options)
     .build();
+
+  driver.waitForUrl = (expectedFragment, timeout = 10000) =>
+    driver.wait(until.urlContains(expectedFragment), timeout);
+
+  return driver;
 }
 
 module.exports = createDriver;

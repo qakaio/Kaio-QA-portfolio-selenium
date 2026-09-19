@@ -11,12 +11,15 @@ describe('Login Page', function () {
   });
 
   afterEach(async function () {
-    await driver.quit();
+    if (driver) {
+      await driver.quit();
+    }
   });
 
   it('should login successfully with valid credentials', async function () {
     const loginPage = new LoginPage(driver);
     await loginPage.login('standard_user', 'secret_sauce');
+    await driver.waitForUrl('/inventory');
     const url = await driver.getCurrentUrl();
     expect(url).to.include('/inventory');
   });
@@ -24,8 +27,7 @@ describe('Login Page', function () {
   it('should show error for invalid credentials', async function () {
     const loginPage = new LoginPage(driver);
     await loginPage.login('invalid_user', 'wrong_password');
-    const errorEl = await driver.findElement({ css: '[data-test="error"]' });
-    const errorText = await errorEl.getText();
+    const errorText = await loginPage.getErrorText();
     expect(errorText).to.include('Username and password do not match');
   });
 });

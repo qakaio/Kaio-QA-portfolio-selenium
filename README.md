@@ -8,18 +8,44 @@ Complete automation test suite using **Selenium WebDriver** with **JavaScript** 
 
 Built by [Kaio Garcia](https://github.com/qakaio) — Senior QA Engineer
 
+## 60-second start
+
+- Purpose: Selenium-based browser automation for the SauceDemo login and shopping flow.
+- Prerequisites: Node.js 18+, Chrome, and a local browser driver setup.
+- Install: `npm ci`.
+- One test command: `npm test -- --reporter spec`.
+- Expected result: the login flow and basic cart interactions complete successfully with explicit waits.
+- Report command: `npm run test:allure` followed by `npx allure generate allure-results --clean -o allure-report`.
+
+## Getting Started
+
+```text
+Kaio-QA-portfolio-selenium
+├── tests/                 # login, cart, and checkout flows
+├── pages/                 # page objects for the user journey
+├── helpers/               # driver setup and browser lifecycle
+├── .github/workflows/     # CI, Allure, and Pages publishing
+├── package.json           # test and reporting scripts
+├── .mocharc.json          # runner configuration
+├── README.md              # runbook and architecture notes
+└── allure-results/        # generated artifacts for reporting
+```
+
+This repository demonstrates a classic Selenium pattern with explicit waits, page objects, and a small but reliable browser flow that is easy to reason about and extend.
+
 ---
 
 ## Project Status
 
 | Metric | Status |
 |--------|--------|
-| **Test Cases** | 15+ passing |
+| **Coverage Scope** | Core login, inventory, and cart flows |
 | **Architecture** | Page Object Model ✅ |
 | **Assertions** | Chai BDD ✅ |
 | **Browser** | Chrome ✅ |
-| **CI/CD** | GitHub Actions |
-| **Reports** | Mochawesome + **Allure Report** |
+| **CI/CD** | GitHub Actions workflow present |
+| **Reports** | Allure-compatible output |
+| **Limit** | This repo is intentionally a focused browser-automation sample rather than a broad test matrix |
 
 ---
 

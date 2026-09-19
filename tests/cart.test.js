@@ -1,21 +1,19 @@
-const { Builder, By, until } = require('selenium-webdriver');
+const { By, until } = require('selenium-webdriver');
 const { expect } = require('chai');
+const createDriver = require('../helpers/driver');
+const LoginPage = require('../pages/login.page');
 
 describe('Cart Functionality - SauceDemo', function () {
   this.timeout(30000);
   let driver;
 
   beforeEach(async function () {
-    driver = await new Builder().forBrowser('chrome').build();
+    driver = createDriver();
     await driver.get('https://www.saucedemo.com/');
 
-    // login
-    await driver.findElement(By.id('user-name')).sendKeys('standard_user');
-    await driver.findElement(By.id('password')).sendKeys('secret_sauce');
-    await driver.findElement(By.id('login-button')).click();
-
-    const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).to.include('inventory');
+    const loginPage = new LoginPage(driver);
+    await loginPage.login('standard_user', 'secret_sauce');
+    await driver.waitForUrl('/inventory');
   });
 
   afterEach(async function () {
@@ -25,11 +23,9 @@ describe('Cart Functionality - SauceDemo', function () {
   });
 
   it('should add an item to the cart', async function () {
-    // Add item to cart
     const addBtn = await driver.findElement(By.css('[data-test="add-to-cart-sauce-labs-backpack"]'));
     await addBtn.click();
 
-    // Wait for cart badge to update
     await driver.wait(until.elementLocated(By.className('shopping_cart_badge')), 10000);
     const cartBadge = await driver.findElement(By.className('shopping_cart_badge'));
     const badgeText = await cartBadge.getText();
