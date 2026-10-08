@@ -40,15 +40,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome Stable
-        uses: actions/setup-chrome@v2
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
         with:
-          chrome-version: 'latest-stable'
-
-      - name: Install ChromeDriver
-        uses: captvlad/action-chromedriver@v2
-        with:
-          version: latest
+          version: 'latest-stable'
 
       - name: Run Selenium Tests
         run: npm test
