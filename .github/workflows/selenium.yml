@@ -9,11 +9,24 @@ on:
     - cron: '0 9,21 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 jobs:
   test:
     name: Selenium Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,39 +40,44 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome
+      - name: Install Chrome (stable)
         run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          # Use Google's official apt repository for Chrome
+          sudo apt-get update -y
+          sudo apt-get install -y wget unzip
+          # Install Chrome stable
+          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb 2>/dev/null || \
+            sudo apt-get install -y -f
+          google-chrome-stable --version
 
       - name: Install ChromeDriver (matching Chrome version)
         run: |
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+          # Get Chrome version
+          CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}' | cut -d. -f1)
+          # Get matching ChromeDriver version from the official repo
           CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
           echo "Chrome version: $CHROME_VERSION"
           echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
-          wget -q -O /tmp/chromedriver_linux64.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-          sudo unzip -o /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver-linux64/chromedriver
-          sudo ln -sf /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-          /usr/local/bin/chromedriver --version
+          # Download and install ChromeDriver
+          wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
+          unzip -o chromedriver-linux64.zip -d /tmp/chromedriver
+          sudo mv /tmp/chromedriver/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          chromedriver --version
 
       - name: Start Xvfb
         run: |
-          sudo Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 3
-
-      - name: Install Allure
-        run: npm install -g allure-commandline
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 5
+          echo "Xvfb running: $!"
 
       - name: Run Selenium Tests
         run: npm test
         env:
           CI: true
           DISPLAY: :99
-          CHROME_BIN: /usr/bin/google-chrome
+          CHROME_BIN: /usr/bin/google-chrome-stable
 
       - name: Upload Allure Results
         if: always()
@@ -69,72 +87,54 @@ jobs:
           path: allure-results/
           retention-days: 7
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-
-  allure:
-    name: Generate Allure Report
-    needs: test
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Download Allure Results
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-results
-          path: allure-results/
-
-      - name: Generate Environment Properties
-        run: |
-          cat > allure-results/environment.properties << 'EOF'
-          framework=Selenium WebDriver + Mocha
-          language=JavaScript (Node.js)
-          browser=Chrome
-          os=Ubuntu
-          project=Kaio-QA-portfolio-selenium
-          repo=https://github.com/qakaio/Kaio-QA-portfolio-selenium
-          EOF
-
-      - name: Install Allure
-        run: npm install -g allure-commandline
+      - name: Lint
+        runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: '20'
+              cache: 'npm'
+          - run: npm ci
+          - run: npm run lint
 
       - name: Generate Allure Report
-        if: always()
-        run: |
-          allure generate allure-results --clean -o allure-report --name "Kaio-QA-portfolio-selenium - Selenium WebDriver + Mocha"
-        env:
-          ALLURE_RESULTS_DIR: allure-results
-
-      - name: Deploy Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./allure-report
-          destination_dir: allure-report
-          keep_files: true
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        runs-on: ubuntu-latest
+        permissions:
+          contents: write
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: '20'
+              cache: 'npm'
+          - name: Download Allure Results
+            uses: actions/download-artifact@v4
+            with:
+              name: allure-results
+              path: allure-results/
+          - name: Generate Environment Properties
+            run: |
+              cat > allure-results/environment.properties << 'EOF'
+              framework=Selenium WebDriver + Mocha
+              language=JavaScript (Node.js)
+              browser=Chrome
+              os=Ubuntu
+              project=Kaio-QA-portfolio-selenium
+              repo=https://github.com/qakaio/Kaio-QA-portfolio-selenium
+              EOF
+          - name: Install Allure
+            run: npm install -g allure-commandline
+          - name: Generate Allure Report
+            run: allure generate allure-results --clean -o allure-report --name "Kaio-QA-portfolio-selenium - Selenium WebDriver + Mocha"
+            env:
+              ALLURE_RESULTS_DIR: allure-results
+          - name: Deploy Allure Report to GitHub Pages
+            uses: peaceiris/actions-gh-pages@v3
+            with:
+              github_token: ${{ secrets.GITHUB_TOKEN }}
+              publish_dir: ./allure-report
+              destination_dir: allure-report
+              keep_files: true
