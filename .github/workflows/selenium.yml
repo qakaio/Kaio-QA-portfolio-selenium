@@ -40,44 +40,22 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chrome (stable)
-        run: |
-          # Use Google's official apt repository for Chrome
-          sudo apt-get update -y
-          sudo apt-get install -y wget unzip
-          # Install Chrome stable
-          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i google-chrome-stable_current_amd64.deb 2>/dev/null || \
-            sudo apt-get install -y -f
-          google-chrome-stable --version
+      - name: Install Chrome Stable
+        uses: actions/setup-chrome@v2
+        with:
+          chrome-version: 'latest-stable'
 
-      - name: Install ChromeDriver (matching Chrome version)
-        run: |
-          # Get Chrome version
-          CHROME_VERSION=$(google-chrome-stable --version | awk '{print $3}' | cut -d. -f1)
-          # Get matching ChromeDriver version from the official repo
-          CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}")
-          echo "Chrome version: $CHROME_VERSION"
-          echo "ChromeDriver version: $CHROMEDRIVER_VERSION"
-          # Download and install ChromeDriver
-          wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
-          unzip -o chromedriver-linux64.zip -d /tmp/chromedriver
-          sudo mv /tmp/chromedriver/chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
-          chromedriver --version
-
-      - name: Start Xvfb
-        run: |
-          Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 5
-          echo "Xvfb running: $!"
+      - name: Install ChromeDriver
+        uses: captvlad/action-chromedriver@v2
+        with:
+          version: latest
 
       - name: Run Selenium Tests
         run: npm test
         env:
           CI: true
-          DISPLAY: :99
-          CHROME_BIN: /usr/bin/google-chrome-stable
+          DISPLAY: ':99'
+          CHROME_BIN: /usr/bin/google-chrome
 
       - name: Upload Allure Results
         if: always()
