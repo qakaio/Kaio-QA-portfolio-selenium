@@ -16,4 +16,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci
+      - uses: actions/setup-chrome@v2
+        with:
+          chrome-version: 'latest-stable'
       - run: npm test 2>&1 || true
